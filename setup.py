@@ -25,9 +25,9 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname), encoding='utf-8').read()
 
 setup(
-    name='fxtrade',
+    name='gcloud_utils',
     version='0.0.1',
-    description='python components to handle FX trade',
+    description='python components to handle google apis',
     author=__author__,
     author_email=__author_email__,
     url='',
@@ -39,6 +39,10 @@ setup(
         'setuptools',
         'google',
         'python_box',
+        'google-api-python-client',
+        'google-auth-httplib2',
+        'google-auth-oauthlib',
+        'oauth2client',
     ],
     scripts=[],
     zip_safe=False
