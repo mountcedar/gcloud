@@ -45,8 +45,11 @@ class GoogleDrive(object):
         """
         return self.drive_service.files().list(q=query, pageSize=1000).execute().get('files')
 
-    def search(self, filename):
-        return self.query(query="name='%s'" % filename)
+    def search(self, filename, directory_id=None):
+        if directory_id is None:
+            return self.query(query="name='%s'" % filename)
+        else:
+            return self.query(query="name='%s' and '%s' in parents" % (filename, directory_id))
 
     def list(self, dirname=None, directory_id=None):
         if dirname:
