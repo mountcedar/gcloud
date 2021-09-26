@@ -147,5 +147,5 @@ class GoogleDrive(object):
         }
         if parentID:
             body['parents'] = [{'id': parentID}]
-        root_folder = self.drive_service.files().create(body=body, fields=['id']).execute()
+        root_folder = self.drive_service.files().create(body=body, fields='id').execute()
         return root_folder.get('id')
