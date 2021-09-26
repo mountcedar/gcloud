@@ -149,6 +149,6 @@ class GoogleDrive(object):
           'mimeType': "application/vnd.google-apps.folder"
         }
         if parentID:
-            body['parents'] = [parentID,]
+            body['parents'] = [directory_id,]
         root_folder = self.drive_service.files().create(body=body, fields='id').execute()
         return root_folder.get('id')
