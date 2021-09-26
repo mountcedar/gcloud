@@ -141,7 +141,7 @@ class GoogleDrive(object):
     
     def create_folder(self, name, directory_id=None):
         # Create a folder on Drive, returns the newely created folders ID
-        files = self.search(self, name, directory_id=parentID)
+        files = self.search(self, name, directory_id=directory_id)
         for fobj in files:
             return fobj.get('id')
         body = {
