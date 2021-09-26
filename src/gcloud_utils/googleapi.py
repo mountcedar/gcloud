@@ -139,10 +139,13 @@ class GoogleDrive(object):
                 fields='id'
             ).execute()
     
-    def create_folder(self, folderName, parentID = None):
+    def create_folder(self, name, directory_id=None):
         # Create a folder on Drive, returns the newely created folders ID
+        files = self.search(self, name, directory_id=parentID)
+        for fobj in files:
+            return fobj.get('id')
         body = {
-          'name': folderName,
+          'name': name,
           'mimeType': "application/vnd.google-apps.folder"
         }
         if parentID:
