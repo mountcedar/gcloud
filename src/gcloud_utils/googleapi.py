@@ -139,7 +139,7 @@ class GoogleDrive(object):
                 fields='id'
             ).execute()
     
-    def createRemoteFolder(self, folderName, parentID = None):
+    def create_folder(self, folderName, parentID = None):
         # Create a folder on Drive, returns the newely created folders ID
         body = {
           'title': folderName,
@@ -147,5 +147,5 @@ class GoogleDrive(object):
         }
         if parentID:
             body['parents'] = [{'id': parentID}]
-        root_folder = self.drive_service.files().insert(body=body).execute()
-        return root_folder['id']
+        root_folder = self.drive_service.files().create(body=body, fields=['id']).execute()
+        return root_folder.get('id')
