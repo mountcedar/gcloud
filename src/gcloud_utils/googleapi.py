@@ -62,18 +62,18 @@ class GoogleDrive(object):
         else:
             return self.query(query="'%s' in parents and trashed=false" % directory_id)
 
-    def download(self, filename, parents=[]):
+    def download(self, filename, file_id=None, parents=[]):
         file_list = self.search(filename)
 
         file_id = None
 
-        if not parents:
+        if not file_id and not parents:
             # ファイル ID を取得します。
             for file in file_list:
               if file.get('name') == filename:
                   file_id = file.get('id')
                   break
-        else:
+        elif not file_id:
             for entity in self.list(directory_id=parents[0]):
                 logging.debug('found %s', entity.get('name'))
                 if entity.get('name') == filename:
@@ -83,18 +83,18 @@ class GoogleDrive(object):
         if file_id is None:
             # ファイル ID を取得できなかった場合はエラーメッセージを出力します。
             logging.error(filename + ' が見つかりません.')
-        else:
-            # colab 環境へファイルをアップロードします。
-            with open(filename, 'wb') as f:
-                request = self.drive_service.files().get_media(fileId=file_id)
-                media = googleapiclient.http.MediaIoBaseDownload(f, request)
-                done = False
-                while not done:
-                    progress_status, done = media.next_chunk()
-                    print(100 * progress_status.progress())
-                    logging.info("%完了")
 
-            logging.debug('Googleドライブからのファイル取り込みが完了しました.')
+        # colab 環境へファイルをアップロードします。
+        with open(filename, 'wb') as f:
+            request = self.drive_service.files().get_media(fileId=file_id)
+            media = googleapiclient.http.MediaIoBaseDownload(f, request)
+            done = False
+            while not done:
+                progress_status, done = media.next_chunk()
+                print(100 * progress_status.progress())
+                logging.info("%完了")
+
+        logging.debug('Googleドライブからのファイル取り込みが完了しました.')
     
     def upload(self, filename, parents=[], update=True):
         file_id = None
