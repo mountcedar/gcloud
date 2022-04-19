@@ -139,4 +139,16 @@ class GoogleDrive(object):
                 fields='id'
             ).execute()
     
-
+    def create_folder(self, name, directory_id=None):
+        # Create a folder on Drive, returns the newely created folders ID
+        files = self.search(name, directory_id=directory_id)
+        for fobj in files:
+            return fobj.get('id')
+        body = {
+          'name': name,
+          'mimeType': "application/vnd.google-apps.folder"
+        }
+        if directory_id:
+            body['parents'] = [directory_id,]
+        root_folder = self.drive_service.files().create(body=body, fields='id').execute()
+        return root_folder.get('id')
