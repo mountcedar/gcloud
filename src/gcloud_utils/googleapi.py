@@ -66,8 +66,6 @@ class GoogleDrive(object):
     def download(self, filename='', file_id=None, parents=[]):
         file_list = self.search(filename)
 
-        file_id = None
-
         if not file_id and not parents:
             # ファイル ID を取得します。
             for file in file_list:
