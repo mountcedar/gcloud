@@ -87,7 +87,7 @@ class GoogleDrive(object):
         vfile = BytesIO()
         request = self.drive_service.files().get_media(fileId=file_id)
         media = googleapiclient.http.MediaIoBaseDownload(vfile, request)
-        if filename is None:
+        if not filename:
             filename = self.drive_service.files().get(fileId=file_id).execute()['name']
         done = False
         while not done:
