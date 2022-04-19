@@ -5,6 +5,7 @@ import os
 import logging
 import traceback
 import pickle
+from io import BytesIO
 
 import googleapiclient.discovery
 import googleapiclient.http
@@ -85,14 +86,19 @@ class GoogleDrive(object):
             logging.error(filename + ' が見つかりません.')
 
         # colab 環境へファイルをアップロードします。
-        with open(filename, 'wb') as f:
-            request = self.drive_service.files().get_media(fileId=file_id)
-            media = googleapiclient.http.MediaIoBaseDownload(f, request)
-            done = False
-            while not done:
-                progress_status, done = media.next_chunk()
-                print(100 * progress_status.progress())
-                logging.info("%完了")
+        vfile = BytesIO()
+        request = self.drive_service.files().get_media(fileId=file_id)
+        media = googleapiclient.http.MediaIoBaseDownload(vfile, request)
+        if filename is None:
+            filename = self.drive_service.files().get(fileId=file_id).execute()['name']
+        done = False
+        while not done:
+            progress_status, done = media.next_chunk()
+            print(100 * progress_status.progress())
+            logging.info("%完了")
+        vfile.seek(0)
+        with open(filename, 'wb') as fp:
+            fp.write(vfile.getvalue())
 
         logging.debug('Googleドライブからのファイル取り込みが完了しました.')
     
