@@ -62,7 +62,7 @@ class GoogleDrive(object):
         else:
             return self.query(query="'%s' in parents and trashed=false" % directory_id)
 
-    def download(self, filename, file_id=None, parents=[]):
+    def download(self, filename='', file_id=None, parents=[]):
         file_list = self.search(filename)
 
         file_id = None
